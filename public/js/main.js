@@ -1,37 +1,27 @@
 "use strict";
 
-var title = "react";
-var fun = function fun() {
-  return "hello react";
+var toggle = false;
+var toggleText = function toggleText() {
+    toggle = !toggle;
+    render();
 };
+function render() {
+    var content = React.createElement(
+        "div",
+        null,
+        React.createElement(
+            "button",
+            { onClick: toggleText },
+            "toggle text"
+        ),
+        toggle ? React.createElement(
+            "p",
+            null,
+            "this is text"
+        ) : ""
+    );
 
-var ele = React.createElement(
-  "div",
-  null,
-  React.createElement(
-    "h1",
-    null,
-    "this is h1 jsx "
-  ),
-  React.createElement(
-    "span",
-    null,
-    "hi this is span"
-  ),
-  React.createElement(
-    "h2",
-    null,
-    " this is ",
-    title,
-    " "
-  ),
-  React.createElement(
-    "span",
-    null,
-    " ",
-    fun(),
-    " "
-  )
-);
+    ReactDOM.render(content, document.getElementById("app"));
+}
 
-ReactDOM.render(ele, document.getElementById("app"));
+render();
