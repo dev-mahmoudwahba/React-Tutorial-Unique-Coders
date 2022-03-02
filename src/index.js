@@ -2,81 +2,80 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      namee: "app cccccccccccc",
-      title: "bla",
+      name: "",
+      option: "",
+      submit: false
     };
-    this.changeTitle = () => {
-      console.log("d");
-      this.setState({
-        title: "new titleeeeeeeeeeee",
-      });
-    };
+   
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
-
+  handleChange(e) {
+    console.log(e.target.id);
+    this.setState({
+      [e.target.id]: e.target.value,
+      submit:false
+    });
+  }
+  handleSubmit(e){
+    e.preventDefault()
+    this.setState({
+      submit : true
+    })
+  }
   render() {
-    console.log(this);
-
+    console.log(this.state);
     return (
       <div className="app">
-        {this.state.title}
-        <br />
-        <button onClick={this.changeTitle}>change title</button>
-        {/* <Header item = {this.state.namee} />
-        <ListItems pro="c" myTitle = {this.state.title} />*/}
-        <br />
-        <br />
-        <br />
-        <AddItem name="add" />
+        <form onSubmit={this.handleSubmit} >
+          <input type="text" onChange={this.handleChange} id="name" />
+          <select onChange={this.handleChange} id="option">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+          <br />
+          <input type="submit" />
+          {this.state.submit && <div> {this.state.name} {this.state.option}  </div> }
+        </form>
+        {/* {this.state.items.map(item=> <div key={item.id} > {item.name} </div> )} */}
+        {/* <ItemFun/> */}
+        {/* <Header />
+        <ListItems />
+        <AddItem /> */}
       </div>
     );
   }
 }
+const ItemFun = () => {
+  return <div>item funccccccccccc compo</div>;
+};
 
 class Header extends React.Component {
   render() {
-    console.log(this);
-
-    return <header> {this.props.item} </header>;
+    return <header> header </header>;
   }
 }
 class ListItems extends React.Component {
   render() {
-    console.log(this);
-
-    return (
-      <div>
-        aaaaaa {this.props.myTitle}
-        <Item />
-        <Item />
-        <Item />
-      </div>
-    );
+    return <div></div>;
   }
 }
 
 class Item extends React.Component {
   render() {
+    console.log(this);
+
     return <div>item</div>;
   }
 }
 
 class AddItem extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      name: "test",
-    };
-    this.changeValue = (e) => {
-      this.setState({name: e.target.value});
-    };
-  }
   render() {
     console.log(this);
-
     return (
       <form>
-        {this.state.name}
-        <input type="text" onChange={this.changeValue} />
+        <input type="text" />
         <input type="submit" />
       </form>
     );
