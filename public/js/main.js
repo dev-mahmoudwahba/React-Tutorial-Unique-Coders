@@ -2,7 +2,7 @@
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -19,88 +19,64 @@ var App = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this));
 
     _this.state = {
-      name: "",
-      option: "",
-      submit: false
+      products: [],
+      item: ""
+    };
+    _this.changeInputVal = _this.changeInputVal.bind(_this);
+    //  this.deleteItem = this.deleteItem.bind(this)
+    //  this.submitForm = this.submitForm.bind(this)
+    _this.submitForm = function (e) {
+      e.preventDefault();
+      var products = [].concat(_toConsumableArray(_this.state.products), [{
+        id: Math.random(),
+        name: _this.state.item
+      }]);
+      _this.setState({
+        products: products,
+        item: ""
+      });
     };
 
-    _this.handleChange = _this.handleChange.bind(_this);
-    _this.handleSubmit = _this.handleSubmit.bind(_this);
+    _this.deleteItem = function (id) {
+      var products = [].concat(_toConsumableArray(_this.state.products));
+      var newProducts = products.filter(function (product) {
+        return product.id != id;
+      });
+      _this.setState({
+        products: newProducts
+      });
+    };
     return _this;
   }
 
   _createClass(App, [{
-    key: "handleChange",
-    value: function handleChange(e) {
-      var _setState;
-
-      console.log(e.target.id);
-      this.setState((_setState = {}, _defineProperty(_setState, e.target.id, e.target.value), _defineProperty(_setState, "submit", false), _setState));
-    }
-  }, {
-    key: "handleSubmit",
-    value: function handleSubmit(e) {
-      e.preventDefault();
+    key: "changeInputVal",
+    value: function changeInputVal(e) {
       this.setState({
-        submit: true
+        item: e.target.value
       });
     }
   }, {
     key: "render",
     value: function render() {
-      console.log(this.state);
+      console.log(this.state.products);
       return React.createElement(
         "div",
         { className: "app" },
-        React.createElement(
-          "form",
-          { onSubmit: this.handleSubmit },
-          React.createElement("input", { type: "text", onChange: this.handleChange, id: "name" }),
-          React.createElement(
-            "select",
-            { onChange: this.handleChange, id: "option" },
-            React.createElement(
-              "option",
-              { value: "1" },
-              "1"
-            ),
-            React.createElement(
-              "option",
-              { value: "2" },
-              "2"
-            ),
-            React.createElement(
-              "option",
-              { value: "3" },
-              "3"
-            )
-          ),
-          React.createElement("br", null),
-          React.createElement("input", { type: "submit" }),
-          this.state.submit && React.createElement(
-            "div",
-            null,
-            " ",
-            this.state.name,
-            " ",
-            this.state.option,
-            "  "
-          )
-        )
+        this.state.item,
+        React.createElement(Header, null),
+        React.createElement(ListItems, { products: this.state.products, removeItem: this.deleteItem }),
+        React.createElement(AddItem, {
+          changeInput: this.changeInputVal,
+          saveData: this.submitForm,
+          item: this.state.item
+        })
       );
     }
   }]);
 
   return App;
 }(React.Component);
-
-var ItemFun = function ItemFun() {
-  return React.createElement(
-    "div",
-    null,
-    "item funccccccccccc compo"
-  );
-};
 
 var Header = function (_React$Component2) {
   _inherits(Header, _React$Component2);
@@ -137,7 +113,21 @@ var ListItems = function (_React$Component3) {
   _createClass(ListItems, [{
     key: "render",
     value: function render() {
-      return React.createElement("div", null);
+      var _this4 = this;
+
+      console.log(this.props);
+      return React.createElement(
+        "div",
+        null,
+        this.props.products.length == 0 && React.createElement(
+          "div",
+          null,
+          " there is no items  "
+        ),
+        this.props.products.map(function (product) {
+          return React.createElement(Item, { id: product.id, item: product.name, removeItem: _this4.props.removeItem });
+        })
+      );
     }
   }]);
 
@@ -156,12 +146,21 @@ var Item = function (_React$Component4) {
   _createClass(Item, [{
     key: "render",
     value: function render() {
-      console.log(this);
+      var _this6 = this;
 
       return React.createElement(
         "div",
         null,
-        "item"
+        " ",
+        this.props.item,
+        " ",
+        React.createElement(
+          "button",
+          { onClick: function onClick() {
+              return _this6.props.removeItem(_this6.props.id);
+            } },
+          " delete"
+        )
       );
     }
   }]);
@@ -181,11 +180,14 @@ var AddItem = function (_React$Component5) {
   _createClass(AddItem, [{
     key: "render",
     value: function render() {
-      console.log(this);
       return React.createElement(
         "form",
-        null,
-        React.createElement("input", { type: "text" }),
+        { onSubmit: this.props.saveData },
+        React.createElement("input", {
+          type: "text",
+          onChange: this.props.changeInput,
+          value: this.props.item
+        }),
         React.createElement("input", { type: "submit" })
       );
     }

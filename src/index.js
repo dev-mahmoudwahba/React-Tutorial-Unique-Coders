@@ -2,54 +2,59 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      name: "",
-      option: "",
-      submit: false
+      products: [],
+      item: "",
     };
-   
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+   this.changeInputVal = this.changeInputVal.bind(this)
+  //  this.deleteItem = this.deleteItem.bind(this)
+  //  this.submitForm = this.submitForm.bind(this)
+    this.submitForm = (e) => {
+      e.preventDefault();
+      let products = [
+        ...this.state.products,
+        {
+          id: Math.random(),
+          name: this.state.item,
+        },
+      ];
+      this.setState({
+        products,
+        item: "",
+      });
+    };
+
+    this.deleteItem = (id) => {
+      let products = [...this.state.products];
+      let newProducts = products.filter((product) => product.id != id);
+      this.setState({
+        products : newProducts
+      })
+    };
   }
-  handleChange(e) {
-    console.log(e.target.id);
+
+  changeInputVal(e){
     this.setState({
-      [e.target.id]: e.target.value,
-      submit:false
+      item: e.target.value,
     });
-  }
-  handleSubmit(e){
-    e.preventDefault()
-    this.setState({
-      submit : true
-    })
-  }
+  };
+
+
   render() {
-    console.log(this.state);
+    console.log(this.state.products);
     return (
       <div className="app">
-        <form onSubmit={this.handleSubmit} >
-          <input type="text" onChange={this.handleChange} id="name" />
-          <select onChange={this.handleChange} id="option">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-          </select>
-          <br />
-          <input type="submit" />
-          {this.state.submit && <div> {this.state.name} {this.state.option}  </div> }
-        </form>
-        {/* {this.state.items.map(item=> <div key={item.id} > {item.name} </div> )} */}
-        {/* <ItemFun/> */}
-        {/* <Header />
-        <ListItems />
-        <AddItem /> */}
+        {this.state.item}
+        <Header />
+        <ListItems products={this.state.products} removeItem={this.deleteItem} />
+        <AddItem
+          changeInput={this.changeInputVal}
+          saveData={this.submitForm}
+          item={this.state.item}
+        />
       </div>
     );
   }
 }
-const ItemFun = () => {
-  return <div>item funccccccccccc compo</div>;
-};
 
 class Header extends React.Component {
   render() {
@@ -58,24 +63,38 @@ class Header extends React.Component {
 }
 class ListItems extends React.Component {
   render() {
-    return <div></div>;
+    console.log(this.props);
+    return (
+      <div>
+        {this.props.products.length == 0 &&  <div> there is no items  </div> }
+        {this.props.products.map((product) => (
+          <Item id={product.id} item={product.name} removeItem={this.props.removeItem} />
+        ))}
+      </div>
+    );
   }
 }
 
 class Item extends React.Component {
   render() {
-    console.log(this);
-
-    return <div>item</div>;
+    return (
+      <div>
+        {" "}
+        {this.props.item} <button onClick={ ()=> this.props.removeItem(this.props.id)}  > delete</button>
+      </div>
+    );
   }
 }
 
 class AddItem extends React.Component {
   render() {
-    console.log(this);
     return (
-      <form>
-        <input type="text" />
+      <form onSubmit={this.props.saveData}>
+        <input
+          type="text"
+          onChange={this.props.changeInput}
+          value={this.props.item}
+        />
         <input type="submit" />
       </form>
     );
