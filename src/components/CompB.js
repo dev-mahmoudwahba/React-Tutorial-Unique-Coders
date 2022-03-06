@@ -1,20 +1,15 @@
 import React, { Component } from 'react'
-
+import withComp from './withComp'
  class CompB extends Component {
-     state = {
-         name : " comp b"
-     }
-     updateNameStat = ()=> {
-         this.setState({
-             name : " comp b2"
-         })
-     }
+    
   render() {
+    const {name , updateNameState} = this.props 
     return (
-      <div>CompB
-          <button onClick = {this.updateNameStat} >update Name</button>
+      <div>
+        {name}
+          <button onClick = {updateNameState} >update Name</button>
       </div>
     )
   }
 }
-export default CompB
+export default withComp(CompB)
