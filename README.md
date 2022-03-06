@@ -1,6 +1,6 @@
 
 # React-Tutorial-Unique-Coders
-# instructor Hamza Nabiel on youtube
+# instructor Hamza Nabil on youtube
 ## tutorial link on youtube https://www.youtube.com/playlist?list=PLtFbQRDJ11kFJFzd5UNy5vSnkbR031vG9
 =======
 # Getting Started with Create React App
