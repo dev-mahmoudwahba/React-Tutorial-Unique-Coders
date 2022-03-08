@@ -1,20 +1,29 @@
-import React, { useState, createContext } from "react";
-import Sidebar from "./components/Sidebar";
-import Widget from "./components/Widget";
+import React, { useState, useRef, createContext, useEffect } from "react";
 
-export const ProductContext = createContext();
+
 
 
 export default function App() {
-  const [product, setProduct] = useState("laptop");
+const [user , setUser ] = useState()
+  const refInput = useRef()
+
+const count= useRef(0)
+
+useEffect(() => {
+  count.current = count.current +1
+  // refInput.current.focus()
+  // refInput.current.value = "xx"
+  // console.log(refInput);
+},[user])
 
   return (
-    <ProductContext.Provider value={[1,2,4]}>
       <div>
-        <h1> HOOKS [use context] </h1>
-        <Sidebar  />
-        <Widget  />
+        <h1> HOOKS [useRef] </h1>
+        <input  ref={refInput} type="text" onChange= {(e)=> setUser(e.target.value) } />
+        <br/>
+        {user}<br/>
+        {count.current} 
+
       </div>
-    </ProductContext.Provider>
   );
 }
